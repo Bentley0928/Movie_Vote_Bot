@@ -16,7 +16,6 @@ day_time = None#決定要去看電影的時間
 person_vote_num = 0     #一個人幾票
 add_string = ""         #show all
 show_all_bool = False   #是否開啟show all
-chat_id = -1001984208872
 
 #電影
 movie_choice,movie_kind = bridge.get_movie()
