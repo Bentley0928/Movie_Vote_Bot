@@ -11,7 +11,8 @@
 2. Choose the movie theater to go to.
 3. Determine the preferred time slot.
 
-## Command Descriptions:
+## Command Descriptions
+'''
 /start,/help : bot send the manual
 /vm + <maximum number of votes>: Generate a movie voting form.
 /vt + <maximum number of votes>: Generate a movie theater voting form (must decide on the movie first and use /next afterward).
@@ -20,9 +21,14 @@
 /sv: Display options with their respective vote counts.
 /search: Display all options voted by the user who called the command.
 /next: Proceed to the next step.
-
+'''
 ## Graphical Interface:
 "show all": Display all options (for easy copy-pasting).
+
+## bot_example.py
+By changing the "token" and running the program, you can run your movie_vote_bot on your telegram.
+![image](https://github.com/weiso131/movie_vote_bot/assets/131360912/24f20a6f-8005-4a1b-8b58-2f6dcc7d3285)
+
 
 
 
