@@ -1,7 +1,13 @@
 
+import math
+import requests
+from bs4 import BeautifulSoup
+from json import loads
+import json
+from datetime import date
+from threading import Thread
 
-
-
+import CIP_module
 def get_movie():
     """輸出格式:
 
@@ -17,9 +23,21 @@ def get_movie():
     
     )
 
+    
     """
-    return ([["m1","m2","m3","m4","m5","m6","m7","m8","m9"],
-                ["m10","m11","m12"],["m13","m14","m15"]] , ["kind1","kind2","kind3"])
+    all_movies = CIP_module.get_movie_data()[1]
+    movies = [all_movies]
+    movies_page = ["page" + str(1)]
+    
+    
+    
+
+    
+
+
+    return (movies , movies_page)
+
+theater_movie_time = {}
 def get_theater(movie : str):
     """輸出格式:
 
@@ -39,9 +57,21 @@ def get_theater(movie : str):
     得出會上映這部電影的電影院
 
     """
-    return ([["t__1","t__2","t__3","t__4","t__5","2t1","2t2","2t3","2t4","2t5","2t1","2t2","2t3","2t4","2t5"],
-                  ["2t1","2t2","2t3","2t4","2t5"],["t__1","t__2","t__3","t__4","t__5"]],
-                  ["city 1","city 2","city 3"])
+    cities = []
+    theaters = []
+    data = CIP_module.scrape_movies_info(n = -1, request_date = str(date.today()),movie = movie)
+    for area in data[0]["area"]:
+        cities.append(area["city"])
+        theaters.append([])
+        theaters_data = area["theaters"]
+        for t in theaters_data:
+            theaters[len(theaters) - 1].append(t['theater_name'])
+            print(t['theater_name'])
+            theater_movie_time[t['theater_name']] = t["showing"]
+        # print(cities[len(cities) - 1])
+        # print(theaters[len(theaters) - 1])
+    
+    return (theaters, cities)
 def get_time(movie : str,theater : str):
     """輸出格式:
 
@@ -56,7 +86,7 @@ def get_time(movie : str,theater : str):
      ]
     
     )
-
+    
     依據輸入的theater和movie
     這部電影在這個電影院三天的時間表
 
@@ -64,9 +94,23 @@ def get_time(movie : str,theater : str):
     "7/25 19:00 - 21:00"
     
     """
-    return ([["1","2","3","4","5","6","7","8"],
-                  ["1","2","3","4","5","6","7","8"],
-                  ["1","2","3","4","5","6","7","8"],
-                  ["1","2","3","4","5","6","7","8"],
-                  ["1","2","3","4","5","6","7","8"]],
-                  ["1","2","3","4","5"])
+    showing_time = theater_movie_time[theater]
+
+    day = []
+    for d in showing_time.keys():
+        day.append(str(d))
+    time = []
+    for d in day:
+        
+        time.append([])
+        for t in showing_time[d]:
+            time[len(time) - 1].append(str(d) + " " + str(t))
+    print(day)
+    print(time)
+    return ([time,list(day)])
+
+
+#print(CIP_module.scrape_movies_info(n = -1, request_date = str(date.today()),movie = "鬼郵輪：瑪麗皇后號"))
+
+get_theater("鬼郵輪：瑪麗皇后號")
+get_time("鬼郵輪：瑪麗皇后號","台北樂聲影城")

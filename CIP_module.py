@@ -102,9 +102,7 @@ def parse_schedule_html(schedule_html):
         movie_data["area"][-1]["theaters"].append({"theater_name": tn, "showing": {}})
 
         for mvif in movie_info:
-            tp, dt, tm = mvif["data-movie_type"], mvif["data-movie_date"], mvif["data-movie_time"]
-            if tp not in movie_data["area"][-1]["theaters"][-1]:
-                movie_data["area"][-1]["theaters"][-1]["showing"] = {}
+            dt, tm = mvif["data-movie_date"], mvif["data-movie_time"]
             if dt not in movie_data["area"][-1]["theaters"][-1]["showing"]:
                 movie_data["area"][-1]["theaters"][-1]["showing"][dt] = []
             movie_data["area"][-1]["theaters"][-1]["showing"][dt].append(tm)
@@ -126,7 +124,7 @@ def scrape_movie_info(idx, i, request_date):
         # 若處理過程中出現錯誤，則跳過該電影的處理，繼續處理下一部電影
         pass
 
-def scrape_movies_info(n = -1, request_date = str(date.today())):
+def scrape_movies_info(n = -1, request_date = str(date.today()), movie = "鬼郵輪：瑪麗皇后號"):
     """
     爬取 Yahoo 電影網站的電影資訊，包含放映資訊。
 
@@ -134,7 +132,7 @@ def scrape_movies_info(n = -1, request_date = str(date.today())):
         list: 包含各部電影資訊的列表
     """
     global movies_info
-
+    movie_id = int(get_movie_id(movie))
     # 獲取 Yahoo 電影網站上的電影資料，包含電影 ID 和電影名稱
     ids, names = get_movie_data()
     
@@ -143,6 +141,7 @@ def scrape_movies_info(n = -1, request_date = str(date.today())):
     
     # 逐個電影進行處理 使用threading
     threads = []
+    ids = [movie_id]
     for idx, i in enumerate(ids):
         if idx == n: break
         threads.append(Thread(target = scrape_movie_info, args = (idx, i, request_date)))
@@ -153,3 +152,13 @@ def scrape_movies_info(n = -1, request_date = str(date.today())):
 
     # 返回包含各部電影資訊的列表
     return movies_info
+def get_movie_id(movie):
+    ids, all_movies = get_movie_data()
+    
+    index = 0
+    for i in range(1,len(all_movies)):
+        if(all_movies[i] == movie):
+            index = i
+            break
+    print(all_movies[index],movie)
+    return(ids[index])

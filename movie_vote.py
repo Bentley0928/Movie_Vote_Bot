@@ -264,7 +264,7 @@ def show_all(call):#實現選項一覽
     change_button_page(call,choice, title,kind)#更新投票表單
     
 @bot.message_handler(commands=['vote'])#直接投票
-def show_vote_result(message):
+def vote(message):
     user_id = message.from_user.id    #得知誰按了按鈕(用來防止一人投多次同個選項、限制每人票數上限)
     option_choice = ""
     if (str(message.text).find("@") != -1):
@@ -329,7 +329,7 @@ def show_vote_result(message):
     bot.reply_to(message,result)
 
 @bot.message_handler(commands=['next'])#進行到下一階段
-def next(message):
+def Next(message):
     global movie
     global theater
     global day_time
@@ -340,7 +340,7 @@ def next(message):
     if (len(vote_highest_name) == 0):#強制使用者依照流程
         bot.reply_to(message, "尚未投票")
         return
-    elif(len(vote_highest_name) == 1):#有唯一最高票
+    elif(len(vote_highest_name) == 1 and (movie == None or theater == None)):#有唯一最高票
         vote_highest_name = vote_highest_name[0]
     elif(movie == None or theater == None):         #有多個最高票->繼續投到唯一最高票產生
         show = ""
@@ -350,7 +350,6 @@ def next(message):
         return
     else:
         day_time = ""
-
         for vhn in vote_highest_name:
             day_time += vhn + '\n'
 
