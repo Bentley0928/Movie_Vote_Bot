@@ -4,7 +4,7 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, InlineQuer
 
 import bridge
 
-token = "6618282878:AAHxSA6x_syoEijH83R80f4M-uBlqKN0l4E"
+token = "TOKEN"
 
 bot = telebot.TeleBot(token)
 
